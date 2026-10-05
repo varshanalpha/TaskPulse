@@ -11,12 +11,10 @@ import {
   LogIn, 
   LogOut, 
   User as UserIcon,
-  Database,
   Menu,
   X
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
-import { useTasks } from '../context/TaskContext';
 import type { ViewMode, FilterState } from '../types';
 
 interface NavbarProps {
@@ -26,7 +24,7 @@ interface NavbarProps {
   onFilterChange: (filters: Partial<FilterState>) => void;
   onOpenCreateModal: () => void;
   onOpenAuthModal: () => void;
-  onOpenSetupModal: () => void;
+  onOpenSetupModal?: () => void;
   theme: 'dark' | 'light';
   onToggleTheme: () => void;
   mobileSidebarOpen: boolean;
@@ -40,14 +38,12 @@ export const Navbar: React.FC<NavbarProps> = ({
   onFilterChange,
   onOpenCreateModal,
   onOpenAuthModal,
-  onOpenSetupModal,
   theme,
   onToggleTheme,
   mobileSidebarOpen,
   onToggleMobileSidebar,
 }) => {
   const { user, isDemoMode, signOut } = useAuth();
-  const { dbSchemaMissing, isUsingLocalStorage } = useTasks();
 
   return (
     <header className="navbar-wrapper">
@@ -72,19 +68,6 @@ export const Navbar: React.FC<NavbarProps> = ({
               <span className="brand-subtitle">Pro Management</span>
             </div>
           </div>
-
-          {/* Database connection badge */}
-          <button 
-            type="button"
-            onClick={onOpenSetupModal}
-            className={`db-status-pill ${dbSchemaMissing || isUsingLocalStorage ? 'status-warning' : 'status-live'}`}
-            title="Click to view Supabase database sync details"
-          >
-            <Database size={13} />
-            <span>
-              {dbSchemaMissing ? 'SQL Setup Needed' : isUsingLocalStorage ? 'Demo Storage' : 'Supabase Live'}
-            </span>
-          </button>
         </div>
 
         {/* Center: Search & View Switcher */}
